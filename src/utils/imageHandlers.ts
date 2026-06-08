@@ -1,7 +1,8 @@
 import { createHash } from 'crypto';
+import type { MulterFile } from '@/types/file';
 
 export async function createImage(
-  file: Express.Multer.File,
+  file: MulterFile,
 ): Promise<{ imageUrl: string; imageHash: string }> {
   const buffer =
     file.buffer ??

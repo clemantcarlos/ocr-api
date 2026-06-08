@@ -15,6 +15,7 @@ import { Public } from '../auth/common/decorators/public.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { fromBuffer } from 'pdf2pic';
 // TYPES
+import type { MulterFile } from '@/types/file';
 import { UploadDto } from './dto/upload.dto';
 // PIPES
 import { FileRequiredPipe } from './pipes/require-file.pipe';
@@ -29,7 +30,7 @@ export class OcrController {
   @UseInterceptors(FileInterceptor('file'))
   @HttpCode(HttpStatus.OK)
   async convertPdfToImg(
-    @UploadedFile(new FileRequiredPipe('file')) file: Express.Multer.File,
+    @UploadedFile(new FileRequiredPipe('file')) file: MulterFile,
     @Body() dto: UploadDto,
   ) {
     const options = {
@@ -46,13 +47,9 @@ export class OcrController {
     const pageToConvertAsImage = 1;
 
     try {
-      const result = await convert(pageToConvertAsImage, {
+      const result = (await convert(pageToConvertAsImage, {
         responseType: 'buffer',
-      });
-
-      if (!result.buffer) {
-        throw new Error('No se obtuvo buffer de imagen');
-      }
+      })) as { buffer: Buffer };
 
       const ocrResult = await this.ocrService.extractTextFromImage(
         result.buffer,

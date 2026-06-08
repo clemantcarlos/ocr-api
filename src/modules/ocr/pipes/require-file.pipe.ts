@@ -1,17 +1,5 @@
 import { BadRequestException, Injectable, PipeTransform } from '@nestjs/common';
-
-interface MulterFile {
-  fieldname: string;
-  originalname: string;
-  encoding: string;
-  mimetype: string;
-  size: number;
-  destination: string;
-  filename: string;
-  path: string;
-  buffer: Buffer;
-  stream: NodeJS.ReadableStream;
-}
+import type { MulterFile } from '@/types/file';
 
 @Injectable()
 export class FileRequiredPipe implements PipeTransform<
