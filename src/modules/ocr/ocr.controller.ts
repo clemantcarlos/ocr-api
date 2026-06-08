@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  HttpCode,
+  HttpStatus,
   Post,
   UploadedFile,
   UseInterceptors,
@@ -25,6 +27,7 @@ export class OcrController {
   @Post('upload')
   @UsePipes(new ValidationPipe())
   @UseInterceptors(FileInterceptor('file'))
+  @HttpCode(HttpStatus.OK)
   async convertPdfToImg(
     @UploadedFile(new FileRequiredPipe('file')) file: Express.Multer.File,
     @Body() dto: UploadDto,
