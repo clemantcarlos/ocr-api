@@ -7,7 +7,7 @@
   <img src="https://img.shields.io/badge/Swagger-OpenAPI-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger" />
 </p>
 
-<h1 align="center">🪪 ali-api</h1>
+<h1 align="center">🪪 OCR-API</h1>
 
 <p align="center">
   <strong>RESTful API — Authentication & Document OCR</strong><br />
