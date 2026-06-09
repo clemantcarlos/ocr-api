@@ -163,16 +163,11 @@ export class AuthService {
     });
 
     const { keyHash: _, ...safeKey } = apiKey;
+    void _;
 
-    // el rawkey lo retornamos para que se muestre una sola vez
-    return { rawKey, apiKey: { ...safeKey } as Omit<ApiKey, 'keyHash'> };
+    return { rawKey, apiKey: safeKey };
   }
 
-  /*
-    Buscamos todas las apis del usuario ordenadas por fecha de creacion descendendte, 
-    devolviendo solo el "id, name, prefix, lastUsedAt, expiresAt, isRevoked, createdAt, updatedAt"
-    (NUNCA el keyhash ni el rawkey)
-  */
   async getApiKeys(userId: string) {
     return this.prisma.apiKey.findMany({
       where: { userId },

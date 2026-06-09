@@ -2,7 +2,6 @@ import {
   IsDateString,
   IsEmail,
   IsNotEmpty,
-  IsNumber,
   IsOptional,
   IsString,
   IsUUID,
@@ -11,7 +10,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-import { passwordRegex, phoneRegex } from '@/utils/constants.regex';
+import { passwordRegex } from '@/utils/constants.regex';
 
 export class CreateUserDto {
   @IsOptional()
