@@ -1,8 +1,11 @@
 import {
   Body,
   Controller,
+  Delete,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   UseGuards,
   UsePipes,
@@ -11,7 +14,7 @@ import {
 // services
 import { AuthService } from './auth.service';
 // dto
-import { AuthDto } from './dto/auth.dto';
+import { AuthDto, CreateApiKeyDto } from './dto/auth.dto';
 import { CreateUserDto } from 'src/modules/user/dto/user.dto';
 // guards
 import { RtGuard } from './common/guards/rt.guard';
@@ -58,5 +61,29 @@ export class AuthController {
     @GetCurrentUser('refreshToken') rt: string,
   ): Promise<ResponseDto<Tokens>> {
     return this.authService.refreshTokens(userId, rt);
+  }
+
+  @Post('api-keys')
+  @HttpCode(HttpStatus.CREATED)
+  createApiKey(
+    @GetCurrentUser('sub') userId: string,
+    @Body() dto: CreateApiKeyDto,
+  ) {
+    return this.authService.createApiKey(userId, dto.name, dto.expiresAt);
+  }
+
+  @Get('api-keys')
+  @HttpCode(HttpStatus.OK)
+  getApiKeys(@GetCurrentUser('sub') userId: string) {
+    return this.authService.getApiKeys(userId);
+  }
+
+  @Delete('api-keys/:id')
+  @HttpCode(HttpStatus.OK)
+  revokeApiKey(
+    @GetCurrentUser('sub') userId: string,
+    @Param('id') keyId: string,
+  ) {
+    return this.authService.revokeApiKey(userId, keyId);
   }
 }

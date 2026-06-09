@@ -19,4 +19,21 @@ model User {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
+
+  apiKeys ApiKey[]
+}
+model ApiKey {
+  id      String @id @default(uuid())
+  name    String // nombre que le pones para identificar (ej: "Produccion", "Dev")
+  keyHash String @unique  // SHA-256 del raw key, asi buscamos rapido y seguro
+  prefix  String // primeros 12 chars del raw key (ej: "ali_7f3a...")
+
+  userId String // dueno de la key
+  user   User   @relation(fields: [userId], references: [id])
+
+  lastUsedAt DateTime? // ultima vez que se uso
+  expiresAt  DateTime? // expiracion opcional
+  isRevoked  Boolean   @default(false) // si esta revocada
+  createdAt  DateTime  @default(now()) 
+  updatedAt  DateTime  @default(now()) @updatedAt
 }
