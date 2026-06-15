@@ -1,178 +1,129 @@
-<p align="center">
-  <img src="https://img.shields.io/badge/NestJS-11-E0234E?style=for-the-badge&logo=nestjs&logoColor=white" alt="NestJS 11" />
-  <img src="https://img.shields.io/badge/TypeScript-5.7-3178C6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript 5.7" />
-  <img src="https://img.shields.io/badge/Prisma-7-2D3748?style=for-the-badge&logo=prisma&logoColor=white" alt="Prisma 7" />
-  <img src="https://img.shields.io/badge/PostgreSQL-16-4169E1?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/Tesseract.js-5-00BFFF?style=for-the-badge&logo=tesseract&logoColor=white" alt="Tesseract.js" />
-  <img src="https://img.shields.io/badge/Swagger-OpenAPI-85EA2D?style=for-the-badge&logo=swagger&logoColor=black" alt="Swagger" />
-</p>
+<div align="center">
 
-<h1 align="center">🪪 OCR-API</h1>
+🔍 OCR API — Document OCR with NestJS
 
-<p align="center">
-  <strong>RESTful API — Authentication & Document OCR</strong><br />
-  Construido con NestJS, Prisma y PostgreSQL. Autenticación JWT + API keys, y reconocimiento óptico de caracteres (OCR) sobre facturas venezolanas.
-</p>
+RESTful API for authentication and document OCR text extraction from Venezuelan invoices
 
-<p align="center">
-  <a href="#✨-features">Features</a> •
-  <a href="#📐-architecture">Architecture</a> •
-  <a href="#🚀-quick-start">Quick Start</a> •
-  <a href="#📚-api-docs">API Docs</a> •
-  <a href="#📂-project-structure">Structure</a> •
-  <a href="#🧪-testing">Testing</a>
-</p>
+[!TypeScript](https://www.typescriptlang.org/)
+[!NestJS](https://nestjs.com/)
+[!Prisma](https://www.prisma.io/)
+[!PostgreSQL](https://www.postgresql.org/)
+[!Tesseract.js](https://tesseract.projectnaptha.com/)
+[!Swagger](https://swagger.io/)
+[!License](LICENSE)
 
----
+</div>
+
+> ⚠️ Work in Progress — This project is actively under development. Some features are incomplete or still under development.
+
+***
+
+## 📋 About the Project
+
+OCR API is a RESTful API built with NestJS that provides authentication and document OCR (Optical Character Recognition) capabilities. It is specifically designed for extracting text from Venezuelan invoices and receipts, such as Digitel phone bills and Banesco third-party payment receipts.
+
+The API uses Tesseract.js for OCR processing with Spanish language support, and includes JWT authentication with API key management for secure integrations.
 
 ## ✨ Features
 
-### 🔐 Authentication & Authorization
-- **Registro e inicio de sesión** con email y contraseña (bcrypt + JWT)
-- **Access tokens** (15 min) y **refresh tokens** (7 días) con rotación segura
-- **API keys** programables (`ali_…`) — crea, lista y revoca llaves para integraciones
-- Guard global con fallback automático: JWT → API Key
+| Feature | Description |
+|---------|-------------|
+| JWT Authentication | Access/refresh token pair for secure access |
+| API Key Management | Generate and manage API keys for integrations |
+| PDF Upload | Upload PDF documents for processing |
+| OCR Text Extraction | Extract text from images/PDFs using Tesseract.js |
+| Spanish OCR | Trained data for Spanish language recognition |
+| Swagger Documentation | Interactive API documentation at `/api` |
+| User Management | User registration and profile management |
 
-### 📄 OCR Inteligente
-- Sube facturas/recibos en **PDF**, se convierten a imagen y se extrae texto mediante **Tesseract.js**
-- Regiones de extracción predefinidas para documentos venezolanos:
-  - **Digitel** — facturas de telefonía
-  - **Banesco** — pago a terceros
-- Validación de archivos: solo PDF, máximo 5 MB
-
-### 📋 API Documentada
-- Swagger UI interactivo en `/api`
-
----
-
-## 📐 Architecture
+## 🏗️ Architecture
 
 ```
-                    ┌─────────────┐
-                    │   Client    │
-                    └──────┬──────┘
-                           │
-              ┌────────────┼────────────┐
-              │ JWT Bearer │ x-api-key  │
-              └──────┬─────┴─────┬──────┘
-                     │           │
-              ┌──────▼───────────▼──────┐
-              │   AtGuard (global)      │
-              │   JWT Strategy  │       │
-              │   API Key Strat│       │
-              └──────┬──────────────────┘
-                     │
-              ┌──────▼──────────────────┐
-              │     NestJS App          │
-              │  ┌─────┐  ┌─────────┐  │
-              │  │Auth │  │   OCR   │  │
-              │  │Module│  │ Module  │  │
-              │  └──┬──┘  └────┬────┘  │
-              │     │          │        │
-              │  ┌──▼──────────▼────┐  │
-              │  │  PrismaModule    │  │
-              │  │  (PostgreSQL)    │  │
-              │  └─────────────────┘  │
-              └───────────────────────┘
+ocr-api/
+├── src/
+│   ├── main.ts              # Application entry point
+│   ├── app.module.ts        # Root module
+│   ├── modules/             # Feature modules (auth, ocr, users, api-keys)
+│   ├── prisma/              # Prisma service and schema
+│   ├── interfaces/          # Standard response types
+│   ├── types/               # TypeScript type definitions
+│   └── utils/               # Utilities (regex, hashing)
+├── prisma/
+│   └── schema.prisma        # Database schema
+├── test/                    # Unit and e2e tests
+├── spa.traineddata          # Spanish OCR training data
+├── nest-cli.json
+├── tsconfig.json
+└── package.json
 ```
 
-**Stack:**
-- **NestJS 11** — framework modular con inyección de dependencias
-- **Prisma 7** — ORM tipado con PostgreSQL
-- **Passport.js** — estrategias JWT (access + refresh)
-- **Tesseract.js** — OCR en español
-- **pdf2pic** — conversión PDF → PNG
-- **Swagger** — documentación automática de endpoints
+## 🛠️ Tech Stack
 
----
+**Backend:**
+- Framework: NestJS 11 with modular architecture
+- ORM: Prisma 7 with PostgreSQL
+- Authentication: Passport.js + JWT (access + refresh tokens)
+- Validation: class-validator + class-transformer
+- Documentation: Swagger/OpenAPI
+- Testing: Jest + Supertest
+- OCR: Tesseract.js 7
+- PDF Processing: pdf2pic
 
-## 🚀 Quick Start
+## 🚀 Getting Started
 
-### Prerrequisitos
-- Node.js ≥ 20
-- PostgreSQL
+### Prerequisites
+
+- Node.js >= 18
+- PostgreSQL >= 14
 - npm
 
-### Instalación
+### Installation
 
 ```bash
-git clone https://github.com/tu-usuario/ali-api.git
-cd ali-api
+# Clone the repository
+git clone https://github.com/your-username/ocr-api.git
+cd ocr-api
 
+# Install dependencies
 npm install
 
-# Configurar variables de entorno
+# Set up environment variables
 cp .env.example .env
-# Editar DATABASE_URL con tu conexión PostgreSQL
+# Edit .env with your PostgreSQL configuration
+```
 
-# Ejecutar migraciones
+### Database Setup
+
+```bash
+# Run Prisma migrations
 npx prisma migrate dev
 
-# Iniciar servidor de desarrollo
-npm run start:dev
+# Generate Prisma client
+npx prisma generate
 ```
 
-La API estará disponible en `http://localhost:3000` y Swagger en `http://localhost:3000/api`.
+### Running the Application
 
----
-
-## 📚 API Docs
-
-| Método | Endpoint                | Auth       | Descripción                           |
-|--------|------------------------|------------|---------------------------------------|
-| POST   | `/auth/local/signup`   | ❌ Público | Registrar nuevo usuario               |
-| POST   | `/auth/local/signin`   | ❌ Público | Iniciar sesión → tokens               |
-| POST   | `/auth/logout`         | ✅ JWT     | Cerrar sesión                         |
-| POST   | `/auth/refresh`        | ✅ Refresh | Renovar token pair                    |
-| POST   | `/auth/api-keys`       | ✅ JWT     | Crear API key                         |
-| GET    | `/auth/api-keys`       | ✅ JWT     | Listar API keys del usuario           |
-| DELETE | `/auth/api-keys/:id`   | ✅ JWT     | Revocar API key                       |
-| POST   | `/ocr/upload`          | ✅ Auth*   | Subir PDF y extraer texto con OCR     |
-
-_\* El endpoint OCR tiene `@Public()` pero requiere API key o autenticación según configuración._
-
-Todas las respuestas siguen el formato:
-```json
-{
-  "success": true,
-  "data": { … }
-}
+```bash
+npm run start:dev      # Start in development mode
+npm run build          # Build for production
+npm run start:prod     # Start in production mode
 ```
 
----
+The Swagger documentation will be available at `http://localhost:3000/api`.
 
-## 📂 Project Structure
+## 📦 Available Commands
 
-```
-src/
-├── main.ts                     # Bootstrap: NestFactory, Swagger, CORS
-├── app.module.ts               # Módulo raíz
-├── interfaces/                 # Tipos genéricos de respuesta
-├── types/                      # Tipos compartidos
-├── utils/                      # Helpers (regex, hash, imágenes)
-├── prisma/
-│   ├── prisma.module.ts        # Módulo global de Prisma
-│   └── prisma.service.ts       # Cliente Prisma + Pool PostgreSQL
-└── modules/
-    ├── auth/                   # Autenticación + API keys
-    │   ├── auth.controller.ts
-    │   ├── auth.service.ts
-    │   ├── dto/                # DTOs de entrada
-    │   ├── strategies/         # Passport strategies (JWT)
-    │   └── common/
-    │       ├── decorators/     # @Public(), @GetCurrentUser()
-    │       └── guards/         # AtGuard, RtGuard
-    └── ocr/                    # OCR sobre PDFs
-        ├── ocr.controller.ts
-        ├── ocr.service.ts
-        ├── dto/
-        └── pipes/              # Validación de archivos
-
-prisma/
-└── schema.prisma               # Modelos User + ApiKey
-```
-
----
+| Command | Description |
+|---------|-------------|
+| `npm run start:dev` | Start NestJS in watch mode |
+| `npm run build` | Build for production |
+| `npm run start:prod` | Start in production mode |
+| `npm run test` | Run unit tests |
+| `npm run test:e2e` | Run end-to-end tests |
+| `npm run test:cov` | Run tests with coverage |
+| `npm run lint` | Run ESLint |
+| `npm run format` | Format with Prettier |
 
 ## 🧪 Testing
 
@@ -180,25 +131,29 @@ prisma/
 # Unit tests
 npm run test
 
+# Tests with coverage
+npm run test:cov
+
 # E2E tests
 npm run test:e2e
-
-# Linting
-npm run lint
 ```
 
----
+## 📄 License
 
-## 🛣️ Roadmap / Próximos pasos
+This project is licensed under the MIT License. See LICENSE for more details.
 
-- [ ] Mover JWT secrets a variables de entorno
-- [ ] Implementar roles de usuario (`UserRole`)
-- [ ] Pipeline CI/CD (GitHub Actions + Docker)
-- [ ] Más formatos de documento OCR
-- [ ] Paginación en listado de API keys
+***
 
----
+## 👤 Author
 
-## 📄 Licencia
+**Carlos Clemant**
 
-MIT
+[!GitHub](https://github.com/your-username)
+[!LinkedIn](https://linkedin.com/in/your-profile)
+
+***
+<div align="center">
+
+If you found this project helpful, give it a ⭐!
+
+</div>
